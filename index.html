@@ -38,7 +38,8 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    // Faqat 50 ta savol (Reading olib tashlandi)
+    // 50 TA SAVOL UCHUN BAZA
+    // Javoblar: A=0, B=1, C=2, D=3
     const questions = [
         // Q1-15 (Beginner)
         { q: "1. Hello! I ______ from Uzbekistan.", a: ["is", "am", "are", "be"], c: 1 },
@@ -121,7 +122,7 @@
             }
         });
         
-        // Ballni botga yuborish (Jami 50 ball)
+        // Botga 50 ta savol natijasi yuboriladi
         tg.sendData(JSON.stringify({
             score: score,
             total: 50
