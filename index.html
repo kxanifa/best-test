@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Placement Test</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root { --tg-theme-button-color: #0088cc; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px; background: #f0f2f5; color: #333; line-height: 1.6; }
+        .container { max-width: 700px; margin: auto; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .header { text-align: center; border-bottom: 2px solid #eee; margin-bottom: 25px; padding-bottom: 10px; }
+        .section-title { background: #0088cc; color: white; padding: 8px 15px; border-radius: 8px; margin: 30px 0 15px 0; font-size: 1.1em; }
+        .reading-text { background: #f9f9f9; padding: 15px; border-left: 4px solid #0088cc; margin: 20px 0; font-style: italic; font-size: 0.95em; }
+        .question { margin-bottom: 25px; }
+        .q-text { font-weight: 600; margin-bottom: 12px; display: block; }
+        .options label { display: block; margin: 10px 0; cursor: pointer; padding: 12px; border: 1px solid #e0e0e0; border-radius: 10px; transition: 0.2s; }
+        .options label:hover { background: #f8faff; border-color: #0088cc; }
+        .options input { margin-right: 12px; transform: scale(1.2); }
+        .btn-submit { width: 100%; padding: 18px; background: #0088cc; color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 10px rgba(0,136,204,0.3); }
+        .btn-submit:active { transform: translateY(2px); box-shadow: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>ENGLISH PLACEMENT TEST</h2>
+        <p>Time Allowed: 70 minutes | Total: 70 Questions</p>
+    </div>
+
+    <div class="section-title">PART 1: GRAMMAR & STRUCTURE</div>
+    <div id="grammar-questions"></div>
+
+    <div class="section-title">PART 2: READING COMPREHENSION</div>
+    
+    <div class="reading-text"><b>TEXT 1:</b> My name is Tom...</div>
+    <div id="reading-q-1"></div>
+
+    <div class="reading-text"><b>TEXT 2:</b> Last summer, Sarah and her family...</div>
+    <div id="reading-q-2"></div>
+
+    <div class="reading-text"><b>TEXT 3:</b> Coffee is more than just a drink...</div>
+    <div id="reading-q-3"></div>
+
+    <div class="reading-text"><b>TEXT 4:</b> In recent years, the concept of "remote work"...</div>
+    <div id="reading-q-4"></div>
+
+    <button class="btn-submit" onclick="calculateResult()">Testni Yakunlash</button>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    // JAVOBLAR KALITI (Rasmga asoslanib yangilandi)
+    // A=0, B=1, C=2, D=3
+    const questions = [
+        // Q1-15 (Beginner)
+        { q: "1. Hello! I ______ from Uzbekistan.", a: ["is", "am", "are", "be"], c: 1 }, // 1.B
+        { q: "2. Look at ______ birds in the sky.", a: ["this", "that", "these", "those"], c: 3 }, // 2.D
+        { q: "3. My sister ______ tea every morning.", a: ["drink", "drinks", "is drinking", "drinking"], c: 1 }, // 3.B
+        { q: "4. There aren't ______ pictures on the wall.", a: ["some", "a", "any", "the"], c: 2 }, // 4.C
+        { q: "5. ______ you swim? Yes, I can.", a: ["Are", "Do", "Can", "Does"], c: 2 }, // 5.C
+        { q: "6. My father is a doctor. This is ______ car.", a: ["his", "her", "he", "him"], c: 0 }, // 6.A
+        { q: "7. Where ______ they going now?", a: ["do", "is", "are", "does"], c: 2 }, // 7.C
+        { q: "8. We have lunch ______ 1:00 PM.", a: ["on", "at", "in", "to"], c: 1 }, // 8.B
+        { q: "9. ______ brother is tall and handsome.", a: ["Sarah is", "Sarah's", "Sarahs'", "Sarah"], c: 1 }, // 9.B
+        { q: "10. Please, ______ the door.", a: ["close", "to close", "closing", "closes"], c: 0 }, // 10.A
+        { q: "11. Yesterday, I ______ at home.", a: ["am", "was", "were", "did"], c: 1 }, // 11.B
+        { q: "12. How ______ apples are there on the table?", a: ["much", "many", "any", "a lot"], c: 1 }, // 12.B
+        { q: "13. He ______ like playing football.", a: ["don't", "isn't", "doesn't", "not"], c: 2 }, // 13.C
+        { q: "14. What ______ you do last Sunday?", a: ["were", "did", "are", "had"], c: 1 }, // 14.B
+        { q: "15. My house is ______ than yours.", a: ["big", "bigger", "biggest", "more big"], c: 1 }, // 15.B
+
+        // Q16-30 (Elementary)
+        { q: "16. I ______ never seen a ghost.", a: ["did", "have", "was", "has"], c: 1 }, // 16.B
+        { q: "17. If it rains tomorrow, we ______ go to the park.", a: ["don't", "won't", "didn't", "haven't"], c: 1 }, // 17.B
+        { q: "18. While I ______ TV, the lights went out.", a: ["watched", "watch", "was watching", "am watching"], c: 2 }, // 18.C
+        { q: "19. You ______ wear a uniform at school. It is a rule.", a: ["must", "can", "may", "might"], c: 0 }, // 19.A
+        { q: "20. This is the restaurant ______ we met last year.", a: ["which", "who", "where", "that"], c: 2 }, // 20.C
+        { q: "21. She is going ______ a new dress for the party.", a: ["buy", "to buy", "buying", "bought"], c: 1 }, // 21.B
+        { q: "22. I haven't finished my homework ______.", a: ["just", "already", "yet", "since"], c: 2 }, // 22.C
+        { q: "23. This book is ______ interesting than the film.", a: ["as", "more", "most", "so"], c: 1 }, // 23.B
+        { q: "24. Someone ______ my wallet yesterday!", a: ["steal", "stole", "stolen", "was stealing"], c: 1 }, // 24.B
+        { q: "25. I am interested ______ learning history.", a: ["on", "at", "in", "with"], c: 2 }, // 25.C
+        { q: "26. He is the ______ student in the class.", a: ["good", "better", "best", "goodest"], c: 2 }, // 26.C
+        { q: "27. ______ you help me carry this bag, please?", a: ["Should", "Must", "Could", "Do"], c: 2 }, // 27.C
+        { q: "28. They have lived in this house ______ 2010.", a: ["for", "since", "from", "ago"], c: 1 }, // 28.B
+        { q: "29. I was cooking dinner when my husband ______ .", a: ["arrive", "arrived", "was arriving", "has arrived"], c: 1 }, // 29.B
+        { q: "30. There is ______ milk left in the fridge.", a: ["a few", "many", "a little", "any"], c: 2 }, // 30.C
+
+        // Q31-40 (Pre-Intermediate)
+        { q: "31. The letter ______ by the secretary right now.", a: ["is written", "is being written", "wrote", "writes"], c: 1 }, // 31.B
+        { q: "32. If I ______ you, I would study harder.", a: ["am", "was", "were", "be"], c: 2 }, // 32.C
+        { q: "33. He asked me where ______ .", a: ["did I live", "do I live", "I lived", "I live"], c: 2 }, // 33.C
+        { q: "34. I regret ______ you that you did not pass the interview.", a: ["tell", "to tell", "telling", "told"], c: 1 }, // 34.B
+        { q: "35. By the time we arrived, the train ______ already left.", a: ["has", "had", "was", "did"], c: 1 }, // 35.B
+        { q: "36. I am not used to ______ on the left side of the road.", a: ["drive", "driving", "drove", "be driven"], c: 1 }, // 36.B
+        { q: "37. You’d better ______ a doctor before it gets worse.", a: ["see", "to see", "seeing", "saw"], c: 0 }, // 37.A
+        { q: "38. The man ______ car was stolen is my neighbor.", a: ["who", "whom", "whose", "which"], c: 2 }, // 38.C
+        { q: "39. ______ the heavy rain, they played the match.", a: ["Although", "Despite", "However", "Even"], c: 1 }, // 39.B
+        { q: "40. I wish I ______ that yesterday.", a: ["didn't say", "hadn't said", "haven't said", "wouldn't say"], c: 1 }, // 40.B
+
+        // Q41-50 (Intermediate)
+        { q: "41. It is high time we ______ home.", a: ["go", "went", "have gone", "had gone"], c: 1 }, // 41.B
+        { q: "42. The thief is believed ______ escaping to another country.", a: ["to be", "being", "that he is", "to"], c: 0 }, // 42.A
+        { q: "43. We had our house ______ last month.", a: ["paint", "painting", "painted", "to paint"], c: 2 }, // 43.C
+        { q: "44. Unless you ______ hard, you will fail the exam.", a: ["study", "don't study", "will study", "didn't study"], c: 0 }, // 44.A
+        { q: "45. He gave ______ smoking last year.", a: ["in", "up", "off", "out"], c: 1 }, // 45.B
+        { q: "46. If I ______ known you were coming, I would have baked a cake.", a: ["have", "had", "would have", "was"], c: 1 }, // 46.B
+        { q: "47. The car ______ by the time we arrived.", a: ["has been sold", "had been sold", "was sold", "is sold"], c: 1 }, // 47.B
+        { q: "48. She said that she ______ to Paris the following week.", a: ["will go", "is going", "would go", "went"], c: 2 }, // 48.C
+        { q: "49. It is important that he ______ on time.", a: ["be", "is", "are", "will be"], c: 0 }, // 49.A
+        { q: "50. I would rather you ______ not smoke here.", a: ["do", "did", "will", "would"], c: 1 }, // 50.B
+        
+        // READING QUESTIONS (51-70)
+        // Text 1
+        { q: "51. Where does Tom live?", a: ["In London", "In Tashkent", "In Samarkand", "In a hotel"], c: 1 }, // 51.B
+        { q: "52. Why does he like his job?", a: ["He likes driving fast", "He earns money", "He meets many people", "Easy job"], c: 2 }, // 52.C
+        { q: "53. What is his dream?", a: ["Football player", "Buy new car", "Travel to America", "Watch TV"], c: 2 }, // 53.C
+        { q: "54. Tom thinks watching TV is interesting.", a: ["True", "False"], c: 1 }, // 54.B (False)
+        { q: "55. He has two children.", a: ["True", "False"], c: 1 }, // 55.B (False)
+        
+        // Text 2
+        { q: "56. How long did they travel to get to the mountains?", a: ["30 mins", "1 hour", "3 hours", "5 hours"], c: 2 }, // 56.C
+        { q: "57. Why was Sarah afraid at night?", a: ["Wolf", "Cold", "Hungry", "Dark and noises"], c: 3 }, // 57.D
+        { q: "58. What did Sarah see in the morning?", a: ["Bear", "Rabbit", "Wolf", "Fox"], c: 1 }, // 58.B
+        { q: "59. What did she do when she saw the animal?", a: ["Ran away", "Cried", "Took a photo", "Fed it"], c: 2 }, // 59.C
+        { q: "60. Her father told her the noise was a monster.", a: ["True", "False"], c: 1 }, // 60.B (False)
+        
+        // Text 3
+        { q: "61. Why do people go to coffee shops?", a: ["Work", "Sleep", "Social activity", "Dinner"], c: 2 }, // 61.C
+        { q: "62. What is the positive effect of caffeine?", a: ["Sleep", "Energy", "Cure disease", "Calm"], c: 1 }, // 62.B
+        { q: "63. Negative effect of too much coffee?", a: ["Hungry", "Good for heart", "Anxious", "Tired"], c: 2 }, // 63.C
+        { q: "64. Why avoid coffee in the evening?", a: ["Expensive", "Tastes bad", "Disturb sleep", "Cold"], c: 2 }, // 64.C
+        { q: "65. Doctors recommend 10 cups a day.", a: ["True", "False"], c: 1 }, // 65.B (False)
+        
+        // Text 4
+        { q: "66. Situation before remote work?", a: ["Home office", "Commuting to offices", "No traffic", "No work"], c: 1 }, // 66.B
+        { q: "67. Main advantage of working from home?", a: ["Free lunch", "Save transport money", "Watch TV", "Meet people"], c: 1 }, // 67.B
+        { q: "68. Why feel lonely?", a: ["No family", "No internet", "No face-to-face contact", "Big house"], c: 2 }, // 68.C
+        { q: "69. Problem with 'separating work and life'?", a: ["Always at work", "No desk", "Noisy family", "Fewer hours"], c: 0 }, // 69.A
+        { q: "70. 'Hybrid model' means working only from home.", a: ["True", "False"], c: 1 } // 70.B (False)
+    ];
+
+    function renderQuestions() {
+        const grammarDiv = document.getElementById('grammar-questions');
+        const r1 = document.getElementById('reading-q-1');
+        const r2 = document.getElementById('reading-q-2');
+        const r3 = document.getElementById('reading-q-3');
+        const r4 = document.getElementById('reading-q-4');
+
+        questions.forEach((item, i) => {
+            let html = `<div class="question"><span class="q-text">${item.q}</span><div class="options">`;
+            item.a.forEach((opt, index) => {
+                html += `<label><input type="radio" name="q${i}" value="${index}"> ${opt}</label>`;
+            });
+            html += `</div></div>`;
+
+            if (i < 50) grammarDiv.innerHTML += html;
+            else if (i < 55) r1.innerHTML += html;
+            else if (i < 60) r2.innerHTML += html;
+            else if (i < 65) r3.innerHTML += html;
+            else r4.innerHTML += html;
+        });
+    }
+
+    function calculateResult() {
+        let score = 0;
+        questions.forEach((item, i) => {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if (selected && parseInt(selected.value) === item.c) {
+                score++;
+            }
+        });
+        
+        // Ballni botga yuborish
+        tg.sendData(JSON.stringify({
+            score: score,
+            total: 70
+        }));
+    }
+
+    renderQuestions();
+</script>
+</body>
+</html>
